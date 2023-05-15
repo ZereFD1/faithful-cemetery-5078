@@ -13,65 +13,82 @@ import com.masai.dto.Stocks;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWrongException;
 
+/**
+ * @author Harsh
+ *
+ *This Code registers the customer
+ *Exception Handled
+ */
+
+/**
+ * @author Harsh
+ *
+ */
 public class BrokerDaoImpl implements BrokerDao {
 
 	@Override
 	public void registerCustomer(Customer cust) throws SomeThingWrongException {
 		Connection connection = null;
 		try {
-			//connect to database
+			// connect to database
 			connection = DbUtils.connectToDatabase();
-			//prepare the query
+			// prepare the query
 			String INSERT_QUERY = "INSERT INTO customer (cid, username, password, status, wallet) VALUES (?, ?, ?, ?, ?)";
-			
-			//get the prepared statement object
+
+			// get the prepared statement object
 			PreparedStatement ps = connection.prepareStatement(INSERT_QUERY);
-			
-			//stuff the data in the query
+
+			// stuff the data in the query
 			ps.setInt(1, cust.getId());
 			ps.setString(2, cust.getUsername());
 			ps.setString(3, cust.getPassword());
 			ps.setBoolean(4, cust.isStatus());
 			ps.setInt(5, cust.getWallet());
-			
-			//execute query
+
+			// execute query
 			ps.executeUpdate();
-		}catch(SQLException sqlEx) {
-			//code to log the error in the file
+		} catch (SQLException sqlEx) {
+			// code to log the error in the file
 			throw new SomeThingWrongException();
-		}finally {
+		} finally {
 			try {
-				//close the exception
-				DbUtils.closeConnection(connection);				
-			}catch(SQLException sqlEX) {
+				// close the exception
+				DbUtils.closeConnection(connection);
+			} catch (SQLException sqlEX) {
 				throw new SomeThingWrongException();
 			}
 		}
 
 	}
 
+	/**
+	 * @author Harsh
+	 *
+	 *         Connection provided to database Code for view the list of customers
+	 */
+
 	@Override
 	public List<Customer> viewCustomers() throws SomeThingWrongException, NoRecordFoundException {
 		Connection connection = null;
 		List<Customer> list = new ArrayList<>();
 		try {
-			//connect to database
+			// connect to database
 			connection = DbUtils.connectToDatabase();
-			//prepare the query
+			// prepare the query
 			String SELECT_QUERY = "SELECT * FROM customer";
-			
-			//get the prepared statement object
+
+			// get the prepared statement object
 			PreparedStatement ps = connection.prepareStatement(SELECT_QUERY);
-			
-			//execute query
+
+			// execute query
 			ResultSet resultSet = ps.executeQuery();
-			
-			//check if result set is empty
-			if(DbUtils.isResultSetEmpty(resultSet)) {
+
+			// check if result set is empty
+			if (DbUtils.isResultSetEmpty(resultSet)) {
 				throw new NoRecordFoundException("No Customer Found");
 			}
-			
-			while(resultSet.next()) {
+
+			while (resultSet.next()) {
 				Customer cust = new Customer();
 
 				cust.setId(resultSet.getInt(1));
@@ -81,50 +98,54 @@ public class BrokerDaoImpl implements BrokerDao {
 				cust.setWallet(resultSet.getInt(5));
 				list.add(cust);
 			}
-			
-		}catch(SQLException sqlEx) {
-			//code to log the error in the file
+
+		} catch (SQLException sqlEx) {
+			// code to log the error in the file
 			throw new SomeThingWrongException();
-		}finally {
+		} finally {
 			try {
-				//close the exception
-				DbUtils.closeConnection(connection);				
-			}catch(SQLException sqlEX) {
+				// close the exception
+				DbUtils.closeConnection(connection);
+			} catch (SQLException sqlEX) {
 				throw new SomeThingWrongException();
 			}
 		}
 		return list;
 	}
 
+	/**
+	 * @author Harsh Add the details and data of stocks
+	 */
+
 	@Override
 	public void addStock(Stocks stk) throws SomeThingWrongException {
 		Connection connection = null;
 		try {
-			//connect to database
+			// connect to database
 			connection = DbUtils.connectToDatabase();
-			//prepare the query
+			// prepare the query
 			String INSERT_QUERY = "INSERT INTO stocks (sid, stock_name, quantity, price_per_stock, total_initial_quantity) VALUES (?, ?, ?, ?, ?)";
-			
-			//get the prepared statement object
+
+			// get the prepared statement object
 			PreparedStatement ps = connection.prepareStatement(INSERT_QUERY);
-			
-			//stuff the data in the query
+
+			// stuff the data in the query
 			ps.setInt(1, stk.getId());
 			ps.setString(2, stk.getName());
 			ps.setInt(3, stk.getQuantity());
 			ps.setInt(4, stk.getPrice());
 			ps.setInt(5, stk.getTotalQuantity());
-			
-			//execute query
+
+			// execute query
 			ps.executeUpdate();
-		}catch(SQLException sqlEx) {
-			//code to log the error in the file
+		} catch (SQLException sqlEx) {
+			// code to log the error in the file
 			throw new SomeThingWrongException();
-		}finally {
+		} finally {
 			try {
-				//close the exception
-				DbUtils.closeConnection(connection);				
-			}catch(SQLException sqlEX) {
+				// close the exception
+				DbUtils.closeConnection(connection);
+			} catch (SQLException sqlEX) {
 				throw new SomeThingWrongException();
 			}
 		}
@@ -135,42 +156,41 @@ public class BrokerDaoImpl implements BrokerDao {
 	public void StockReport(int stockID) throws SomeThingWrongException, NoRecordFoundException {
 		Connection connection = null;
 		try {
-			//connect to database
+			// connect to database
 			connection = DbUtils.connectToDatabase();
-			//prepare the query
-			String SELECT_QUERY = "SELECT * FROM stocks where sid = '"+ stockID+"'";
-			
-			//get the prepared statement object
+			// prepare the query
+			String SELECT_QUERY = "SELECT * FROM stocks where sid = '" + stockID + "'";
+
+			// get the prepared statement object
 			PreparedStatement ps = connection.prepareStatement(SELECT_QUERY);
-			
-			//execute query
+
+			// execute query
 			ResultSet resultSet = ps.executeQuery();
-			
-			//check if result set is empty
-			if(DbUtils.isResultSetEmpty(resultSet)) {
+
+			// check if result set is empty
+			if (DbUtils.isResultSetEmpty(resultSet)) {
 				throw new NoRecordFoundException("No Stock Found");
 			}
-			
-			while(resultSet.next()) {
-				
+
+			while (resultSet.next()) {
+
 				String stkName = resultSet.getString(2);
 				int quanityLeft = resultSet.getInt(3);
 				int totalQuanity = resultSet.getInt(5);
-				
-				System.out.println("Stock name = "+stkName + " Stock sold = " +(totalQuanity-quanityLeft) + " Stock available = " + quanityLeft );
-				
-				
-				
+
+				System.out.println("Stock name = " + stkName + " Stock sold = " + (totalQuanity - quanityLeft)
+						+ " Stock available = " + quanityLeft);
+
 			}
-			
-		}catch(SQLException sqlEx) {
-			//code to log the error in the file
+
+		} catch (SQLException sqlEx) {
+			// code to log the error in the file
 			throw new SomeThingWrongException();
-		}finally {
+		} finally {
 			try {
-				//close the exception
-				DbUtils.closeConnection(connection);				
-			}catch(SQLException sqlEX) {
+				// close the exception
+				DbUtils.closeConnection(connection);
+			} catch (SQLException sqlEX) {
 				throw new SomeThingWrongException();
 			}
 		}

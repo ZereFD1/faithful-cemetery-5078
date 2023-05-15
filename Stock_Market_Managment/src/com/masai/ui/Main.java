@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.masai.colors.ConsoleColors;
 import com.masai.dao.BrokerDaoImpl;
 import com.masai.dao.CustomerDaoImpl;
 import com.masai.dbUtils.DbUtils;
@@ -22,23 +23,19 @@ public class Main {
 			con = DbUtils.connectToDatabase();
 
 			String insertQuery = "select * from customer where username = ? && password = ?";
-//			System.out.println("hi line 24");
 			PreparedStatement ps = con.prepareStatement(insertQuery);
 
 			ps.setString(1, username);
 			ps.setString(2, password);
-//			System.out.println(username);
-//			System.out.println(password);
 			ResultSet rs = ps.executeQuery();
 
 			if (DbUtils.isResultSetEmpty(rs)) {
-				System.out.println("Wrong username or password");
+				System.out.println(ConsoleColors.RED + "Wrong username or password" + ConsoleColors.RESET);
 			} else {
 				rs.next();
-//				System.out.println("here in line 36");
 				int cid = rs.getInt(1);
-				System.out.println("cid " + cid);
-				System.out.println("Welcome " + username);
+				System.out.println(ConsoleColors.GREEN + "cid " + cid + ConsoleColors.RESET);
+				System.out.println(ConsoleColors.GREEN + "Welcome " + username + ConsoleColors.RESET);
 				UserMenu(sc, cdi, cid);
 				System.exit(0);
 			}
@@ -73,9 +70,9 @@ public class Main {
 			ResultSet rs = ps.executeQuery();
 
 			if (DbUtils.isResultSetEmpty(rs)) {
-				System.out.println("Wrong username or password");
+				System.out.println(ConsoleColors.RED + "Wrong username or password" + ConsoleColors.RESET);
 			} else {
-				System.out.println("Welcome " + username);
+				System.out.println(ConsoleColors.GREEN + "Welcome " + username + ConsoleColors.RESET);
 				adminMenu(sc, bdi);
 				System.exit(0);
 
@@ -96,22 +93,23 @@ public class Main {
 	}
 
 	static void adminLogin(Scanner sc, BrokerDaoImpl bdi) throws SomeThingWrongException, NoRecordFoundException {
-		System.out.println("Hi Admin Please enter username or password");
+		System.out.println(ConsoleColors.YELLOW + "Hi Broker Please enter username or password" + ConsoleColors.RESET);
 
-		System.out.println("Enter username please");
+		System.out.println(ConsoleColors.GREEN + "Enter username please" + ConsoleColors.RESET);
 		String username = sc.next();
-		System.out.println("Enter password please");
+		System.out.println(ConsoleColors.GREEN + "Enter password please" + ConsoleColors.RESET);
 		String password = sc.next();
 
 		isAdmin(username, password, sc, bdi);
 	}
 
 	static void userLogin(Scanner sc, CustomerDaoImpl cdi) throws SomeThingWrongException, NoRecordFoundException {
-		System.out.println("Hi Customer Please enter usenrame or password");
+		System.out
+				.println(ConsoleColors.YELLOW + "Hi Customer Please enter usenrame or password" + ConsoleColors.RESET);
 
-		System.out.println("Enter username please");
+		System.out.println(ConsoleColors.GREEN + "Enter username please" + ConsoleColors.RESET);
 		String username = sc.next();
-		System.out.println("Enter password please");
+		System.out.println(ConsoleColors.GREEN + "Enter password please" + ConsoleColors.RESET);
 		String password = sc.next();
 
 		isUser(username, password, sc, cdi);
@@ -132,11 +130,11 @@ public class Main {
 		int choice = 0;
 		do {
 			displayAdminMenu();
-			System.out.print("Enter selection ");
+			System.out.print(ConsoleColors.GREEN + "Enter selection " + ConsoleColors.RESET);
 			choice = sc.nextInt();
 			switch (choice) {
 			case 0:
-				System.out.println("Bye Bye admin");
+				System.out.println(ConsoleColors.RED + "Bye Bye broker" + ConsoleColors.RESET);
 				break;
 			case 1:
 
@@ -201,27 +199,28 @@ public class Main {
 		int choice = 0;
 		do {
 			displayUserMenu();
-			System.out.print("Enter selection ");
+			System.out.print(ConsoleColors.GREEN + "Enter selection " + ConsoleColors.RESET);
 			choice = sc.nextInt();
 			switch (choice) {
 			case 0:
-				System.out.println("Bye Bye User");
+				System.out.println(ConsoleColors.RED + "Bye Bye User" + ConsoleColors.RESET);
 				break;
 			case 1:
 				System.out.println(cdi.viewStocks());
 				break;
 			case 2:
-				System.out.println("Enter stockid of stock you want to buy");
+				System.out.println(ConsoleColors.BLUE + "Enter stockid of stock you want to buy" + ConsoleColors.RESET);
 				int stock_id = sc.nextInt();
-				System.out.println("Enter stock quantity you want to buy");
+				System.out.println(ConsoleColors.BLUE + "Enter stock quantity you want to buy" + ConsoleColors.RESET);
 				int buyquantity = sc.nextInt();
 				cdi.buyStock(cid, stock_id, buyquantity);
 				break;
 			case 3:
 
-				System.out.println("Enter stockid of stock you want to sell");
+				System.out
+						.println(ConsoleColors.BLUE + "Enter stockid of stock you want to sell" + ConsoleColors.RESET);
 				int sid = sc.nextInt();
-				System.out.println("Enter stock quantity you want to sell");
+				System.out.println(ConsoleColors.BLUE + "Enter stock quantity you want to sell" + ConsoleColors.RESET);
 				int sellquantity = sc.nextInt();
 				cdi.sellStock(cid, sid, sellquantity);
 				break;
@@ -229,7 +228,7 @@ public class Main {
 				cdi.viewTransactionHistory(cid);
 				break;
 			default:
-				System.out.println("Invalid Selection, try again");
+				System.out.println(ConsoleColors.RED + "Invalid Selection, try again" + ConsoleColors.RESET);
 			}
 		} while (choice != 0);
 	}
@@ -242,11 +241,12 @@ public class Main {
 
 		int choice = 0;
 		do {
-			System.out.println("1. Admin Login\n2. Customer Login\n0. Exit");
+			System.out
+					.println(ConsoleColors.GREEN + "1. Broker Login\n2. Customer Login\n0. Exit" + ConsoleColors.RESET);
 			choice = sc.nextInt();
 			switch (choice) {
 			case 0:
-				System.out.println("Thank you, Visit again");
+				System.out.println(ConsoleColors.GREEN + "Thank you, Visit again" + ConsoleColors.RESET);
 				break;
 			case 1:
 				adminLogin(sc, bdi);
@@ -256,7 +256,7 @@ public class Main {
 				userLogin(sc, cdi);
 				break;
 			default:
-				System.out.println("Invalid Selection, try again");
+				System.out.println(ConsoleColors.GREEN + "Invalid Selection, try again" + ConsoleColors.RESET);
 			}
 		} while (choice != 0);
 		sc.close();
