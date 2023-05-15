@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import javax.security.auth.login.CredentialException;
+
 import com.masai.colors.ConsoleColors;
 import com.masai.dao.BrokerDaoImpl;
 import com.masai.dao.CustomerDaoImpl;
@@ -55,7 +57,7 @@ public class Main {
 	}
 
 	public static void isAdmin(String username, String password, Scanner sc, BrokerDaoImpl bdi)
-			throws SomeThingWrongException, NoRecordFoundException {
+			throws SomeThingWrongException, NoRecordFoundException, CredentialException {
 		Connection con = null;
 		try {
 			con = DbUtils.connectToDatabase();
@@ -92,10 +94,11 @@ public class Main {
 
 	}
 
-	static void adminLogin(Scanner sc, BrokerDaoImpl bdi) throws SomeThingWrongException, NoRecordFoundException {
-		System.out.println(ConsoleColors.YELLOW + "Hi Broker Please enter username or password" + ConsoleColors.RESET);
+	static void adminLogin(Scanner sc, BrokerDaoImpl bdi)
+			throws SomeThingWrongException, NoRecordFoundException, CredentialException {
+		System.out.println(ConsoleColors.YELLOW + "Hi Broker Please enter Email or password" + ConsoleColors.RESET);
 
-		System.out.println(ConsoleColors.GREEN + "Enter username please" + ConsoleColors.RESET);
+		System.out.println(ConsoleColors.GREEN + "Enter Email please" + ConsoleColors.RESET);
 		String username = sc.next();
 		System.out.println(ConsoleColors.GREEN + "Enter password please" + ConsoleColors.RESET);
 		String password = sc.next();
@@ -104,10 +107,9 @@ public class Main {
 	}
 
 	static void userLogin(Scanner sc, CustomerDaoImpl cdi) throws SomeThingWrongException, NoRecordFoundException {
-		System.out
-				.println(ConsoleColors.YELLOW + "Hi Customer Please enter usenrame or password" + ConsoleColors.RESET);
+		System.out.println(ConsoleColors.YELLOW + "Hi Customer Please enter Email or password" + ConsoleColors.RESET);
 
-		System.out.println(ConsoleColors.GREEN + "Enter username please" + ConsoleColors.RESET);
+		System.out.println(ConsoleColors.GREEN + "Enter Email please" + ConsoleColors.RESET);
 		String username = sc.next();
 		System.out.println(ConsoleColors.GREEN + "Enter password please" + ConsoleColors.RESET);
 		String password = sc.next();
@@ -126,7 +128,8 @@ public class Main {
 		System.out.println("0. for Exit");
 	}
 
-	static void adminMenu(Scanner sc, BrokerDaoImpl bdi) throws SomeThingWrongException, NoRecordFoundException {
+	static void adminMenu(Scanner sc, BrokerDaoImpl bdi)
+			throws SomeThingWrongException, NoRecordFoundException, CredentialException {
 		int choice = 0;
 		do {
 			displayAdminMenu();
@@ -233,7 +236,7 @@ public class Main {
 		} while (choice != 0);
 	}
 
-	public static void main(String[] args) throws SomeThingWrongException, NoRecordFoundException {
+	public static void main(String[] args) throws SomeThingWrongException, NoRecordFoundException, CredentialException {
 
 		Scanner sc = new Scanner(System.in);
 		BrokerDaoImpl bdi = new BrokerDaoImpl();
