@@ -7,11 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.CredentialException;
+
 import com.masai.dbUtils.DbUtils;
 import com.masai.dto.Customer;
 import com.masai.dto.Stocks;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWrongException;
+import com.masai.security.EmailValidation;
+import com.masai.security.HashingPassword;
 
 /**
  * @author Harsh
@@ -26,9 +30,16 @@ import com.masai.exception.SomeThingWrongException;
  */
 public class BrokerDaoImpl implements BrokerDao {
 
+	EmailValidation emailValidation = new EmailValidation();
+	HashingPassword hashingPassword = new HashingPassword();
+
 	@Override
-	public void registerCustomer(Customer cust) throws SomeThingWrongException {
+	public void registerCustomer(Customer cust) throws SomeThingWrongException, CredentialException {
 		Connection connection = null;
+		cust.setPassword(hashingPassword.hashingAlgorithem(cust.getPassword()));
+		if (emailValidation.emailValidation(cust.getUsername()) == "Invalid") {
+			throw new CredentialException("Wrong email address plese provide right syntax of email.");
+		}
 		try {
 			// connect to database
 			connection = DbUtils.connectToDatabase();

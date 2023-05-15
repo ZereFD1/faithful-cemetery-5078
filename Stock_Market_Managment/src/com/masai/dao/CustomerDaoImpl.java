@@ -11,6 +11,8 @@ import com.masai.dbUtils.DbUtils;
 import com.masai.dto.Stocks;
 import com.masai.exception.NoRecordFoundException;
 import com.masai.exception.SomeThingWrongException;
+import com.masai.security.EmailValidation;
+import com.masai.security.HashingPassword;
 
 /**
  * @author Harsh prepare the query get the prepared statement object execute
@@ -18,6 +20,9 @@ import com.masai.exception.SomeThingWrongException;
  */
 
 public class CustomerDaoImpl implements CustomerDao {
+
+	EmailValidation emailValidation = new EmailValidation();
+	HashingPassword hashingPassword = new HashingPassword();
 
 	@Override
 	public List<Stocks> viewStocks() throws SomeThingWrongException, NoRecordFoundException {
